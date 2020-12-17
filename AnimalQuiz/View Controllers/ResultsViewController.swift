@@ -23,34 +23,27 @@ class ResultsViewController: UIViewController {
         self.navigationItem.setHidesBackButton(true, animated: false)
         
         // Определил наиболее часто встречающийся тип животного
-        animalMaxCount = userChoseAnimal(animalChosen: animalChosen)
+        animalMaxCount = getMostChosenAnimal(animalChosen: animalChosen)
         
         // Отобразил результаты на экране
         animalChosenLabel.text = "Вы - \(animalMaxCount.rawValue)!"
         animalChosenDescription.text = animalMaxCount.definition
     }
     
-    private func userChoseAnimal(animalChosen: [AnimalType]) -> AnimalType {
+    private func getMostChosenAnimal(animalChosen: [AnimalType]) -> AnimalType {
         var animals: [AnimalType : Int] = [AnimalType.dog : 0,
                                            AnimalType.cat : 0,
                                            AnimalType.rabbit : 0,
                                            AnimalType.turtle : 0]
-        for animal in animalChosen{
-            switch animal{
-            case .dog:
-                animals[.dog]! += 1
-            case .cat:
-                animals[.cat]! += 1
-            case .rabbit:
-                animals[.rabbit]! += 1
-            case .turtle:
-                animals[.turtle]! += 1
+        
+        animalChosen.forEach {
+            if let animal = animals[$0] {
+                animals[$0] = animal + 1
             }
         }
         
-        let animalMaxCount = animals.max{ $0.1 < $1.1 }
-
-        return animalMaxCount!.key
+        let animalMaxCount = animals.max{ $0.1 < $1.1 }?.key ?? .dog
+        return animalMaxCount
     }
 
 }
